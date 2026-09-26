@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Send Rental Request{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-1">Send a rental request</h4>
+                <p class="text-muted">{{ property.title }} &middot; ৳{{ property.monthly_rent }}/month</p>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Message to owner</label>
+                        {{ form.message }}
+                        {% if form.message.errors %}<div class="text-danger small">{{ form.message.errors }}</div>{% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Request</button>
+                    <a href="{{ property.get_absolute_url }}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

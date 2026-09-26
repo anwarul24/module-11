@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Tenant Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Tenant Dashboard</h3>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ total_requests }}</h2><p class="text-muted mb-0">Total Requests</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ pending_requests }}</h2><p class="text-muted mb-0">Pending</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ accepted_requests }}</h2><p class="text-muted mb-0">Accepted</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ rejected_requests }}</h2><p class="text-muted mb-0">Rejected</p></div></div>
+</div>
+<h5>Recent Requests</h5>
+<ul class="list-group shadow-sm mb-4">
+    {% for req in recent_requests %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>{{ req.property.title }} <small class="text-muted">({{ req.property.owner.username }})</small></span>
+            <span class="badge bg-secondary">{{ req.get_status_display }}</span>
+        </li>
+    {% empty %}
+        <li class="list-group-item text-muted">No rental requests yet. <a href="{% url 'properties:list' %}">Browse properties</a>.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'rentals:tenant_requests' %}" class="btn btn-outline-primary">View All My Requests</a>
+{% endblock %}

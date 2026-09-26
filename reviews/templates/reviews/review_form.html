@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Leave a Review{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-1">Review "{{ property.title }}"</h4>
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Rating</label>
+                        {{ form.rating }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comment</label>
+                        {{ form.comment }}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                    <a href="{{ property.get_absolute_url }}" class="btn btn-link">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

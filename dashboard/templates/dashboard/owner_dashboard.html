@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Owner Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Owner Dashboard</h3>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ total_properties }}</h2><p class="text-muted mb-0">Total Properties</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ available_properties }}</h2><p class="text-muted mb-0">Available</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ total_requests }}</h2><p class="text-muted mb-0">Total Requests</p></div></div>
+    <div class="col-md-3"><div class="card text-center shadow-sm p-3"><h2>{{ pending_requests }}</h2><p class="text-muted mb-0">Pending Requests</p></div></div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h5>Recent Properties</h5>
+        <ul class="list-group shadow-sm mb-4">
+            {% for property in recent_properties %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
+                    <span class="text-muted">৳{{ property.monthly_rent }}</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No properties yet. <a href="{% url 'properties:create' %}">Add one</a>.</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h5>Recent Requests</h5>
+        <ul class="list-group shadow-sm mb-4">
+            {% for req in recent_requests %}
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ req.tenant.username }} &rarr; {{ req.property.title }}</span>
+                    <span class="badge bg-secondary">{{ req.get_status_display }}</span>
+                </li>
+            {% empty %}
+                <li class="list-group-item text-muted">No rental requests yet.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'rentals:owner_requests' %}" class="btn btn-outline-primary">Manage All Requests</a>
+    </div>
+</div>
+{% endblock %}

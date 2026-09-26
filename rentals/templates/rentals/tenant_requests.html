@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}My Rental Requests{% endblock %}
+{% block content %}
+<h3 class="mb-4">My Rental Requests</h3>
+<div class="table-responsive">
+<table class="table table-hover bg-white shadow-sm rounded">
+    <thead><tr><th>Property</th><th>Owner</th><th>Date</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for req in requests %}
+        <tr>
+            <td><a href="{{ req.property.get_absolute_url }}">{{ req.property.title }}</a></td>
+            <td>{{ req.property.owner.username }}</td>
+            <td>{{ req.request_date|date:"M d, Y" }}</td>
+            <td>
+                {% if req.status == "PENDING" %}<span class="badge bg-warning text-dark">Pending</span>
+                {% elif req.status == "ACCEPTED" %}<span class="badge bg-success">Accepted</span>
+                {% else %}<span class="badge bg-danger">Rejected</span>{% endif %}
+            </td>
+            <td>
+                {% if req.status == "PENDING" %}
+                    <a href="{% url 'rentals:cancel' req.pk %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+                {% elif req.status == "ACCEPTED" %}
+                    <a href="{% url 'reviews:add' req.property.pk %}" class="btn btn-sm btn-outline-success">Review</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="5" class="text-center text-muted py-4">You haven't sent any rental requests yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

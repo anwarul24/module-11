@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Rental Requests{% endblock %}
+{% block content %}
+<h3 class="mb-4">Rental Requests</h3>
+<div class="table-responsive">
+<table class="table table-hover bg-white shadow-sm rounded">
+    <thead><tr><th>Property</th><th>Tenant</th><th>Message</th><th>Date</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for req in requests %}
+        <tr>
+            <td><a href="{{ req.property.get_absolute_url }}">{{ req.property.title }}</a></td>
+            <td>{{ req.tenant.username }}<br><small class="text-muted">{{ req.tenant.email }}</small></td>
+            <td>{{ req.message|truncatewords:12|default:"—" }}</td>
+            <td>{{ req.request_date|date:"M d, Y" }}</td>
+            <td>
+                {% if req.status == "PENDING" %}<span class="badge bg-warning text-dark">Pending</span>
+                {% elif req.status == "ACCEPTED" %}<span class="badge bg-success">Accepted</span>
+                {% else %}<span class="badge bg-danger">Rejected</span>{% endif %}
+            </td>
+            <td>
+                {% if req.status == "PENDING" %}
+                    <form method="post" action="{% url 'rentals:respond' req.pk 'accept' %}" class="d-inline">
+                        {% csrf_token %}<button class="btn btn-sm btn-success">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'rentals:respond' req.pk 'reject' %}" class="d-inline">
+                        {% csrf_token %}<button class="btn btn-sm btn-outline-danger">Reject</button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No rental requests yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

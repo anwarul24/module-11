@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load form_tags %}
+{% block title %}Browse Properties{% endblock %}
+{% block content %}
+<h3 class="mb-4">Browse Properties</h3>
+
+<form method="get" class="row g-2 mb-4 bg-white p-3 rounded-3 shadow-sm">
+    <div class="col-md-3">
+        {{ form.location|add_class:"form-control" }}
+    </div>
+    <div class="col-md-3">
+        {{ form.property_type|add_class:"form-select" }}
+    </div>
+    <div class="col-md-2">
+        {{ form.min_rent|add_class:"form-control" }}
+    </div>
+    <div class="col-md-2">
+        {{ form.max_rent|add_class:"form-control" }}
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search"></i> Search</button>
+    </div>
+    {% if form.non_field_errors %}<div class="text-danger small mt-2">{{ form.non_field_errors }}</div>{% endif %}
+</form>
+
+<div class="row g-4">
+    {% for property in page_obj %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                {% if property.image %}
+                    <img src="{{ property.image.url }}" class="card-img-top" style="height:180px;object-fit:cover;" alt="{{ property.title }}">
+                {% else %}
+                    <div class="bg-secondary-subtle text-center py-5"><i class="bi bi-house fs-1"></i></div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="card-title">{{ property.title }}</h5>
+                        {% if property.pk in favorite_ids %}<i class="bi bi-heart-fill text-danger"></i>{% endif %}
+                    </div>
+                    <span class="badge bg-secondary align-self-start mb-2">{{ property.get_property_type_display }}</span>
+                    <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> {{ property.location }}</p>
+                    <p class="text-muted mb-1"><i class="bi bi-door-open"></i> {{ property.bedrooms }} bed &middot; {{ property.bathrooms }} bath</p>
+                    <p class="fw-bold text-primary">৳{{ property.monthly_rent }} / month</p>
+                    <a href="{{ property.get_absolute_url }}" class="btn btn-sm btn-outline-primary mt-auto">View Details</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p class="text-muted">No properties match your search.</p>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
