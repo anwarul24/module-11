@@ -6,6 +6,8 @@ reviews after a request is accepted.
 
 Built with Django 5.1, PostgreSQL, and Bootstrap 5.3.
 
+![Logo](screenshots/properties.png)
+
 ---
 
 ## Features
